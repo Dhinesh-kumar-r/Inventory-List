@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body{
+            height: 93vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+       button{
+        padding: 7px 15px;
+        font-size: 16px;
+        margin-left: 10px;
+        
+       }
+       input{ 
+        height: 25px;       
+        padding: 3px 0px;
+        padding-left: 6px;
+       }
+       li{
+        font-size: 18px;
+       }
+    </style>
+</head>
+<body>
+    <div>
+        <input type="text" name="" id="input"><button type="submit" id="btn">Submit</button>
+    </div>
+    <div>
+        <ol id="showInput"></ol>
+    </div>
+
+    <script>
+        let input = document.getElementById('input')
+        let showInput = document.getElementById('showInput')
+        let exist = localStorage.getItem('ExistList')==null?[] : JSON.parse(localStorage.getItem('ExistList'))
+        
+        let addInventoryList = ()=>{
+            let splitInput = input.value.split(' ')
+            switch (splitInput[0].toLowerCase()) {
+                case 'add':
+                    showInput.innerHTML=''
+                    let isExist= exist.filter(value=>{ return value==splitInput[1]})
+                    if(isExist.length==0){
+                        exist.push(splitInput[1])
+                    }
+                    localStorage.setItem('ExistList',JSON.stringify(exist))
+                    break;
+                case 'getlist':
+                showInput.innerHTML=''
+                    for(let a of exist){
+                        showInput.innerHTML+=`
+                            <li>${a}</li>
+                        `
+                    }
+                    break;
+                case 'remove':
+                    showInput.innerHTML=''
+                    exist.map((value,index)=>{
+                        if(value==splitInput[1])
+                        {
+                            exist.splice(index,1)
+                        }
+
+                    })
+                    localStorage.setItem('ExistList',JSON.stringify(exist))
+            
+                default:
+                    break;
+            }
+            input.value=''
+        }
+
+        document.querySelector('#btn').addEventListener('click',addInventoryList)
+
+       
+    </script>
+</body>
+</html>
